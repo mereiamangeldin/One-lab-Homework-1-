@@ -15,6 +15,7 @@ func main() {
 }
 
 func run() error {
+	// отлично
 	conf, err := config.New()
 	if err != nil {
 		log.Fatalln(err)
@@ -29,5 +30,6 @@ func run() error {
 	}
 	h := handler.NewManager(conf, svc)
 	srv := http.NewServer(conf, h)
+	// у тебя же в srv.InitRoutes() возвращается mux а ты тут ждешь Handler 
 	return srv.Run(conf.Port, srv.InitRoutes())
 }

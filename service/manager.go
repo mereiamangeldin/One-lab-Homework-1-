@@ -24,7 +24,7 @@ type Manager struct {
 func NewManager(repo *repository.Repository) (*Manager, error) {
 	userSrv := NewUserService(repo)
 	allUsersSrv := NewAllUsersService(repo)
-	if repo == nil {
+	if repo == nil { // молодец что проверил, но лучше это проверить на 1 строке 
 		return nil, errors.New("No storage given")
 	}
 	return &Manager{User: userSrv, AllUsers: allUsersSrv}, nil

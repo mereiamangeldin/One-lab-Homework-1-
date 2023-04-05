@@ -3,7 +3,7 @@ package http
 import "github.com/gorilla/mux"
 
 func (s *Server) InitRoutes() *mux.Router {
-	r := mux.NewRouter()
+	r := mux.NewRouter()// лучше либо принимать сюда роутер, либо держать его в структуре сервера 
 	r.HandleFunc("/api/v1/users", s.handler.CreateUser).Methods("POST")
 	r.HandleFunc("/api/v1/users", s.handler.GetUsers).Methods("GET")
 	r.HandleFunc("/api/v1/users/{id}", s.handler.GetUserById).Methods("GET")
