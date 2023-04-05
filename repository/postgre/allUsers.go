@@ -15,7 +15,7 @@ func NewAllUsersRepository(db *gorm.DB) *AllUsersRepository {
 
 func (r *AllUsersRepository) Get() ([]model.UserCreateResp, error) {
 	var users []model.UserCreateResp
-	err := r.db.Table("users").Where("deleted_at is NULL").Find(&users)
+	err := r.db.Table("users").Where("deleted_at is NULL").Find(&users) // можно использовать в конце .Error и у тебя будет меньше кода
 	if err.Error != nil {
 		return nil, err.Error
 	}

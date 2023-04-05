@@ -6,6 +6,7 @@ import (
 	"github.com/mereiamangeldin/One-lab-Homework-1/repository/postgre"
 )
 
+// объясни пожалуйста зачем отдельный интферйс ?
 type IAllUsersRepository interface {
 	Get() ([]model.UserCreateResp, error)
 	Create(user model.UserCreateReq) (model.UserCreateResp, error)
