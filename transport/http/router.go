@@ -1,13 +1,24 @@
 package http
 
-import "github.com/gorilla/mux"
+func (s *Server) InitRoutes() {
+	v1 := s.router.Group("api/v1")
+	v1.Use(s.handler.UserIdentity)
+	auth := s.router.Group("/auth")
+	book := s.router.Group("/books")
+	auth.POST("/sign-in", s.handler.SignIn)
+	auth.POST("/sign-up", s.handler.SignUp)
+	v1.PUT("/:id", s.handler.UpdateUser)
+	v1.GET("/:id", s.handler.GetUserById)
+	v1.PUT("/:id/change-password", s.handler.UpdatePassword)
+	v1.DELETE("/:id", s.handler.DeleteUser)
+	v1.GET("/:id/books", s.handler.GetUserBooks)
+	v1.POST("/:id/books", s.handler.TakeBook)
+	v1.DELETE("/:id/books/:book_id", s.handler.ReturnBook)
 
-func (s *Server) InitRoutes() *mux.Router {
-	r := mux.NewRouter()
-	r.HandleFunc("/api/v1/users", s.handler.CreateUser).Methods("POST")
-	r.HandleFunc("/api/v1/users", s.handler.GetUsers).Methods("GET")
-	r.HandleFunc("/api/v1/users/{id}", s.handler.GetUserById).Methods("GET")
-	r.HandleFunc("/api/v1/users/{id}", s.handler.DeleteUser).Methods("DELETE")
-	r.HandleFunc("/api/v1/users/{id}", s.handler.UpdateUser).Methods("PUT")
-	return r
+	book.GET("", s.handler.GetBooks)
+	book.POST("", s.handler.CreateBook)
+	book.GET("/:id", s.handler.GetBookById)
+	book.PUT("/:id", s.handler.UpdateBook)
+	book.DELETE("/:id", s.handler.DeleteBook)
+
 }

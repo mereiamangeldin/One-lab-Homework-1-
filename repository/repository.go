@@ -6,19 +6,31 @@ import (
 	"github.com/mereiamangeldin/One-lab-Homework-1/repository/postgre"
 )
 
-type IAllUsersRepository interface {
-	Get() ([]model.UserCreateResp, error)
-	Create(user model.UserCreateReq) (model.UserCreateResp, error)
-}
 type IUserRepository interface {
 	GetById(id int) (model.UserCreateResp, error)
 	Delete(id int) error
-	Update(id int, user model.UserCreateReq) error
+	Update(id int, user model.User) error
+	UpdatePassword(id uint, pass model.ChangePassword) error
+	TakeBook(id uint, bookId uint) error
+	ReturnBook(id uint, bookId uint) error
+	GetUserBooks(id uint) ([]model.Book, error)
+}
+type IAuthorizationRepository interface {
+	CreateUser(user model.User) (uint, error)
+	GetUser(user model.AuthUser) (model.User, error)
+}
+type IBookRepository interface {
+	GetBooks() ([]model.Book, error)
+	CreateBook(book model.Book) (uint, error)
+	UpdateBook(id uint, book model.Book) error
+	GetBookById(id int) (model.Book, error)
+	DeleteBook(id int) error
 }
 
 type Repository struct {
-	User     IUserRepository
-	AllUsers IAllUsersRepository
+	User IUserRepository
+	Auth IAuthorizationRepository
+	Book IBookRepository
 }
 
 func New(cfg *config.Config) (*Repository, error) {
@@ -27,6 +39,7 @@ func New(cfg *config.Config) (*Repository, error) {
 		return nil, err
 	}
 	userRep := postgre.NewUserRepository(pgDB)
-	allUsersRep := postgre.NewAllUsersRepository(pgDB)
-	return &Repository{User: userRep, AllUsers: allUsersRep}, nil
+	auth := postgre.NewAuthorizationRepository(pgDB)
+	book := postgre.NewBookRepository(pgDB)
+	return &Repository{User: userRep, Auth: auth, Book: book}, nil
 }

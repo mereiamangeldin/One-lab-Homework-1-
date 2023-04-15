@@ -2,14 +2,15 @@ package model
 
 import "gorm.io/gorm"
 
-type UserCreateReq struct {
+type User struct {
 	gorm.Model
-	Name    string `json:"name"`
-	Surname string `json:"surname"`
-	Pass    string `json:"password"`
+	Name     string `json:"name"`
+	Surname  string `json:"surname"`
+	Username string `json:"username"`
+	Password string `json:"password"`
 }
 
-func (u *UserCreateReq) TableName() string {
+func (u *User) TableName() string {
 	return "users"
 }
 
@@ -17,4 +18,14 @@ type UserCreateResp struct {
 	ID      uint
 	Name    string
 	Surname string
+}
+
+type AuthUser struct {
+	Password string `json:"password" binding:"required"`
+	Username string `json:"username" binding:"required"`
+}
+
+type ChangePassword struct {
+	CurrentPassword string `json:"current_password"`
+	NewPassword     string `json:"new_password"'`
 }

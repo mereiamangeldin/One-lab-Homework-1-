@@ -7,7 +7,7 @@ import (
 )
 
 type Config struct {
-	Port     string `env:"PORT" envDefault:"9090"`
+	Port     int    `env:"PORT" envDefault:"8000"`
 	Database string `env:"DATABASE" envDefault:"onelab"`
 	PgURL    string `env:"PG_URL" envDefault:"user=user password=secret dbname=db sslmode=disable host=localhost port=5432"`
 }

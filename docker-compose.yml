@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  golang:
+    build: .
+    container_name: hw1-one-lab
+    ports:
+      - "8080:8080"
+    depends_on:
+      - pgdb
+  pgdb:
+    image: postgres
+    container_name: pgdb
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Merei04977773@
+      POSTGRES_DB: onelab
+    ports:
+      - "5434:5432"

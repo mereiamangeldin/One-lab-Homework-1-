@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"github.com/mereiamangeldin/One-lab-Homework-1/config"
 	"github.com/mereiamangeldin/One-lab-Homework-1/repository"
@@ -8,6 +9,8 @@ import (
 	"github.com/mereiamangeldin/One-lab-Homework-1/transport/http"
 	"github.com/mereiamangeldin/One-lab-Homework-1/transport/http/handler"
 	"log"
+	"os"
+	"os/signal"
 )
 
 func main() {
@@ -15,6 +18,9 @@ func main() {
 }
 
 func run() error {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	gracefullyShutdown(cancel)
 	conf, err := config.New()
 	if err != nil {
 		log.Fatalln(err)
@@ -29,5 +35,14 @@ func run() error {
 	}
 	h := handler.NewManager(conf, svc)
 	srv := http.NewServer(conf, h)
-	return srv.Run(conf.Port, srv.InitRoutes())
+	return srv.Run(ctx)
+}
+
+func gracefullyShutdown(c context.CancelFunc) {
+	osC := make(chan os.Signal, 1)
+	signal.Notify(osC, os.Interrupt)
+	go func() {
+		log.Print(<-osC)
+		c()
+	}()
 }

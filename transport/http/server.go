@@ -2,29 +2,48 @@ package http
 
 import (
 	"context"
+	"fmt"
+	"github.com/labstack/echo/v4"
 	"github.com/mereiamangeldin/One-lab-Homework-1/config"
 	"github.com/mereiamangeldin/One-lab-Homework-1/transport/http/handler"
+	"log"
 	"net/http"
+	"time"
 )
 
 type Server struct {
 	cfg        *config.Config
 	httpServer *http.Server
 	handler    *handler.Manager
+	router     *echo.Echo
 }
 
 func NewServer(cfg *config.Config, handler *handler.Manager) *Server {
 	return &Server{cfg: cfg, handler: handler}
 }
 
-func (s *Server) Run(port string, handler http.Handler) error {
-	s.httpServer = &http.Server{
-		Addr:    ":" + port,
-		Handler: handler,
+func (s *Server) Run(ctx context.Context) error {
+	s.router = s.BuildEngine()
+	s.InitRoutes()
+	go func() {
+		if err := s.router.Start(fmt.Sprintf(":%d", s.cfg.Port)); err != nil && err != http.ErrServerClosed {
+			log.Fatalf("listen:%+s\n", err)
+		}
+	}()
+	<-ctx.Done()
+
+	ctxShutDown, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer func() {
+		cancel()
+	}()
+	if err := s.router.Shutdown(ctxShutDown); err != nil {
+		log.Fatalf("server Shutdown Failed:%+s", err)
 	}
-	return s.httpServer.ListenAndServe()
+	log.Print("server exited properly")
+	return nil
 }
 
-func (s *Server) ShutDown(ctx context.Context) error {
-	return s.httpServer.Shutdown(ctx)
+func (s *Server) BuildEngine() *echo.Echo {
+	e := echo.New()
+	return e
 }
