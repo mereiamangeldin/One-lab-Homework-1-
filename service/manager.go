@@ -36,11 +36,11 @@ type Manager struct {
 }
 
 func NewManager(repo *repository.Repository) (*Manager, error) {
-	userSrv := NewUserService(repo)
-	authSrv := NewAuthorizationService(repo)
-	bookSrv := NewBookService(repo)
 	if repo == nil {
 		return nil, errors.New("No storage given")
 	}
+	userSrv := NewUserService(repo)
+	authSrv := NewAuthorizationService(repo)
+	bookSrv := NewBookService(repo)
 	return &Manager{User: userSrv, Auth: authSrv, Book: bookSrv}, nil
 }
