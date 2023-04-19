@@ -21,11 +21,11 @@ func (s *BookService) UpdateBook(id uint, book model.Book) error {
 	return s.Repo.Book.UpdateBook(id, book)
 }
 
-func (s *BookService) GetBookById(id int) (model.Book, error) {
+func (s *BookService) GetBookById(id uint) (model.Book, error) {
 	return s.Repo.Book.GetBookById(id)
 }
 
-func (s *BookService) DeleteBook(id int) error {
+func (s *BookService) DeleteBook(id uint) error {
 	return s.Repo.Book.DeleteBook(id)
 }
 

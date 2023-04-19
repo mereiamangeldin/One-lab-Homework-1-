@@ -53,7 +53,7 @@ func (h *Manager) DeleteBook(c echo.Context) error {
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
-	err = h.srv.Book.DeleteBook(id)
+	err = h.srv.Book.DeleteBook(uint(id))
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
@@ -68,7 +68,7 @@ func (h *Manager) GetBookById(c echo.Context) error {
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
-	book, err := h.srv.Book.GetBookById(id)
+	book, err := h.srv.Book.GetBookById(uint(id))
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, map[string]string{
 			"error": "No such book",

@@ -7,13 +7,13 @@ import (
 )
 
 type IUserRepository interface {
-	GetById(id int) (model.UserCreateResp, error)
-	Delete(id int) error
-	Update(id int, user model.User) error
+	GetById(id uint) (model.UserCreateResp, error)
+	Delete(id uint) error
+	Update(id uint, user model.User) error
 	UpdatePassword(id uint, pass model.ChangePassword) error
-	TakeBook(id uint, bookId uint) error
-	ReturnBook(id uint, bookId uint) error
 	GetUserBooks(id uint) ([]model.Book, error)
+	GetBalance(id uint) (model.UserBalance, error)
+	UpdateBalance(balance model.UserBalance) error
 }
 type IAuthorizationRepository interface {
 	CreateUser(user model.User) (uint, error)
@@ -23,8 +23,9 @@ type IBookRepository interface {
 	GetBooks() ([]model.Book, error)
 	CreateBook(book model.Book) (uint, error)
 	UpdateBook(id uint, book model.Book) error
-	GetBookById(id int) (model.Book, error)
-	DeleteBook(id int) error
+	GetBookById(id uint) (model.Book, error)
+	DeleteBook(id uint) error
+	GetPrice(id uint) (model.BookPrice, error)
 }
 
 type Repository struct {

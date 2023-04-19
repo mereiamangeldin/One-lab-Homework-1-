@@ -8,6 +8,10 @@ services:
       - "8080:8080"
     depends_on:
       - pgdb
+    volumes:
+      - C:/Users/Merei/Desktop/merei codes/One lab/homework 1:/app
+    networks:
+      - app-network
   pgdb:
     image: postgres
     container_name: pgdb
@@ -17,3 +21,8 @@ services:
       POSTGRES_DB: onelab
     ports:
       - "5434:5432"
+    networks:
+      - app-network
+
+networks:
+  app-network:

@@ -9,6 +9,15 @@ type BookRepository struct {
 	db *gorm.DB
 }
 
+func (r *BookRepository) GetPrice(id uint) (model.BookPrice, error) {
+	var bookPrice model.BookPrice
+	err := r.db.Where("id = ?", id).First(&bookPrice).Error
+	if err != nil {
+		return model.BookPrice{}, err
+	}
+	return bookPrice, nil
+}
+
 func (r *BookRepository) GetBooks() ([]model.Book, error) {
 	var books []model.Book
 	err := r.db.Find(&books)
@@ -20,7 +29,7 @@ func (r *BookRepository) GetBooks() ([]model.Book, error) {
 
 func (r *BookRepository) CreateBook(book model.Book) (uint, error) {
 	res := r.db.Create(&book)
-	return book.Id, res.Error
+	return book.ID, res.Error
 }
 
 func (r *BookRepository) UpdateBook(id uint, bookReq model.Book) error {
@@ -29,7 +38,7 @@ func (r *BookRepository) UpdateBook(id uint, bookReq model.Book) error {
 	return result.Error
 }
 
-func (r *BookRepository) GetBookById(id int) (model.Book, error) {
+func (r *BookRepository) GetBookById(id uint) (model.Book, error) {
 	var book model.Book
 	result := r.db.First(&book, id)
 	if result.Error != nil {
@@ -38,7 +47,7 @@ func (r *BookRepository) GetBookById(id int) (model.Book, error) {
 	return book, nil
 }
 
-func (r *BookRepository) DeleteBook(id int) error {
+func (r *BookRepository) DeleteBook(id uint) error {
 	var book model.Book
 	result := r.db.First(&book, id)
 	if result.Error != nil {

@@ -7,12 +7,13 @@ import (
 )
 
 type IUserService interface {
-	GetById(id int) (model.UserCreateResp, error)
-	Delete(id int) error
-	Update(id int, user model.User) error
-	TakeBook(id uint, bookId uint) error
+	GetById(id uint) (model.UserCreateResp, error)
+	Delete(id uint) error
+	Update(id uint, user model.User) error
+	BuyBook(transactionReq model.TransactionRequest) error
 	ReturnBook(id uint, bookId uint) error
 	GetUserBooks(id uint) ([]model.Book, error)
+	GetBalance(id uint) (model.UserBalance, error)
 }
 type IAuthorizationService interface {
 	CreateUser(user model.User) (uint, error)
@@ -25,8 +26,8 @@ type IBookService interface {
 	GetBooks() ([]model.Book, error)
 	CreateBook(book model.Book) (uint, error)
 	UpdateBook(id uint, book model.Book) error
-	GetBookById(id int) (model.Book, error)
-	DeleteBook(id int) error
+	GetBookById(id uint) (model.Book, error)
+	DeleteBook(id uint) error
 }
 
 type Manager struct {

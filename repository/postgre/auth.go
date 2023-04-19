@@ -23,6 +23,13 @@ func (r *AuthorizationRepository) CreateUser(user model.User) (uint, error) {
 	if err.Error != nil {
 		return 0, err.Error
 	}
+	var userBalance model.UserBalance
+	userBalance.UserID = user.ID
+	userBalance.Balance = 10000
+	err = r.db.Create(&userBalance)
+	if err.Error != nil {
+		return 0, err.Error
+	}
 	return user.ID, nil
 }
 

@@ -13,6 +13,16 @@ import (
 	"os/signal"
 )
 
+// @title           One lab hw
+// @version         1.0
+// @description     This is a sample server celler server.
+
+// @host      localhost:8080
+// @BasePath  /
+
+// @securityDefinitions.apikey  ApiKeyAuth
+// @in header
+// @name Authorization
 func main() {
 	log.Fatalln(fmt.Sprintf("Service shut down:%s", run()))
 }

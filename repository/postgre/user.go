@@ -1,7 +1,6 @@
 package postgre
 
 import (
-	"errors"
 	"github.com/mereiamangeldin/One-lab-Homework-1/model"
 	"gorm.io/gorm"
 	"time"
@@ -11,36 +10,24 @@ type UserRepository struct {
 	db *gorm.DB
 }
 
-func (r *UserRepository) TakeBook(id uint, bookId uint) error {
-	var book model.BookHistory
-	err := r.db.Where("client_id = ? AND book_id = ?", id, bookId).First(&book)
-	if err == nil {
-		return errors.New("book is already taken")
-	}
-	takenBook := model.BookHistory{
-		BookId:   bookId,
-		ClientId: id,
-		TakenAt:  time.Now(),
-	}
-	res := r.db.Create(&takenBook)
-	return res.Error
+func (r *UserRepository) UpdateBalance(balance model.UserBalance) error {
+	result := r.db.Where("user_id = ?", balance.UserID).Updates(balance)
+	return result.Error
 }
 
-func (r *UserRepository) ReturnBook(id uint, bookId uint) error {
-	var book model.BookHistory
-	err := r.db.Where("client_id = ? AND book_id = ?", id, bookId).First(&book)
+func (r *UserRepository) GetBalance(id uint) (model.UserBalance, error) {
+	var balance model.UserBalance
+	err := r.db.Where("user_id = ?", id).First(&balance)
 	if err.Error != nil {
-		return err.Error
+		return model.UserBalance{}, err.Error
 	}
-	book.ReturnedAt = time.Now()
-	r.db.Save(&book)
-	return nil
+	return balance, nil
 }
 
 func (r *UserRepository) GetUserBooks(id uint) ([]model.Book, error) {
 	var books []model.Book
 	var ids []uint
-	r.db.Raw("select book_id from book_history where client_id = ? and returned_at = ?", id, time.Time{}).Pluck("id", &ids)
+	r.db.Raw("select book_id from transactions where client_id = ? and returned_at = ?", id, time.Time{}).Pluck("id", &ids)
 	err := r.db.Where("id IN (?)", ids).Find(&books)
 	if err.Error != nil {
 		return nil, err.Error
@@ -64,7 +51,7 @@ func NewUserRepository(db *gorm.DB) *UserRepository {
 	return &UserRepository{db: db}
 }
 
-func (r *UserRepository) GetById(id int) (model.UserCreateResp, error) {
+func (r *UserRepository) GetById(id uint) (model.UserCreateResp, error) {
 	var userResp model.UserCreateResp
 	err := r.db.Table("users").Where("deleted_at IS NULL").First(&userResp, id)
 	if err.Error != nil {
@@ -73,7 +60,7 @@ func (r *UserRepository) GetById(id int) (model.UserCreateResp, error) {
 	return userResp, nil
 }
 
-func (r *UserRepository) Delete(id int) error {
+func (r *UserRepository) Delete(id uint) error {
 	var user model.User
 	result := r.db.First(&user, id)
 	if result.Error != nil {
@@ -83,7 +70,7 @@ func (r *UserRepository) Delete(id int) error {
 	return result.Error
 }
 
-func (r *UserRepository) Update(id int, user model.User) error {
+func (r *UserRepository) Update(id uint, user model.User) error {
 	result := r.db.Where("id = ?", id).Updates(user)
 	return result.Error
 }

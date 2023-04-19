@@ -10,6 +10,15 @@ type User struct {
 	Password string `json:"password"`
 }
 
+type UserBalance struct {
+	UserID  uint    `json:"user_id"`
+	Balance float64 `json:"balance"`
+}
+
+func (u *UserBalance) TableName() string {
+	return "user_balance"
+}
+
 func (u *User) TableName() string {
 	return "users"
 }
