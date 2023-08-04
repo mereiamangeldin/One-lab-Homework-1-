@@ -1,9 +1,15 @@
-start:
-	docker-compose up --build
 
 stop:
 	docker-compose down
-	docker rmi homework1-golang
+
+run:
+	docker-compose up -d
+
 
 migrate-up:
-	migrate -path ./migrations -database 'postgres://postgres:Merei04977773@@localhost:5434/onelab?sslmode=disable' up
+	migrate -path ./migrations -database 'postgres://postgres:Merei04977773@@localhost:5434/kazakTeam?sslmode=disable' up
+
+start:
+	go run ./cmd/main.go
+
+

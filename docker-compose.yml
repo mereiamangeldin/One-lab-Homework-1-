@@ -3,13 +3,13 @@ version: '3.8'
 services:
   golang:
     build: .
-    container_name: hw1-one-lab
+    container_name: kazakTeam
     ports:
       - "8080:8080"
     depends_on:
       - pgdb
     volumes:
-      - C:/Users/Merei/Desktop/merei codes/One lab/homework 1:/app
+      - C:/Users/Merei/Desktop/merei codes/Golang/final project/backend/kazakTeam-backend:/app
     networks:
       - app-network
   pgdb:
@@ -18,7 +18,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: Merei04977773@
-      POSTGRES_DB: onelab
+      POSTGRES_DB: kazakTeam
     ports:
       - "5434:5432"
     networks:
